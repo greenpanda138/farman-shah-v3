@@ -186,3 +186,86 @@ p { margin: 0 0 16px; }
   .js .reveal { opacity: 1; transform: none; transition: none; }
   .demo-screen, .btn, .demo-tab { transition: none; }
 }
+
+/* ---- Flashy layer (2026-11-07): council-approved only — GPU properties, no WebGL ---- */
+
+/* Cursor spotlight: council-approved cursor glow. Fixed, follows the pointer. */
+.spotlight {
+  position: fixed; left: 0; top: 0; z-index: 1;
+  width: 480px; height: 480px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 255, 224, 0.10), transparent 62%);
+  pointer-events: none; opacity: 0;
+  transition: opacity .35s ease-out;
+  will-change: transform;
+}
+.spotlight.is-on { opacity: 1; }
+@media (hover: none), (pointer: coarse) { .spotlight { display: none; } }
+
+/* Staggered hero entrance: one orchestrated moment, fade + 28px rise, 60-90ms steps */
+.js .hero-anim {
+  opacity: 0;
+  animation: hero-in .7s cubic-bezier(.23, 1, .32, 1) forwards;
+  animation-delay: var(--d, 0s);
+}
+@keyframes hero-in {
+  from { opacity: 0; transform: translateY(28px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Magnetic buttons: JS translates them toward the pointer (max ~10px) */
+.magnetic {
+  transition: transform .25s cubic-bezier(.23, 1, .32, 1), background-color .2s ease-out;
+  will-change: transform;
+}
+.nav-cta.magnetic { display: inline-block; }
+
+/* Nav links: underline slides in (transform only) */
+.nav nav a { position: relative; }
+.nav nav a::after {
+  content: ""; position: absolute; left: 0; bottom: -4px;
+  width: 100%; height: 2px; background: var(--teal);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform .25s cubic-bezier(.23, 1, .32, 1);
+}
+.nav nav a:hover::after, .nav nav a:focus-visible::after { transform: scaleX(1); }
+
+/* Text links: nudge right on hover */
+.text-link {
+  display: inline-block;
+  transition: color .2s ease-out, transform .25s cubic-bezier(.23, 1, .32, 1);
+}
+.text-link:hover { transform: translateX(4px); }
+
+/* Project cards: subtle tilt (JS rotateX/rotateY, max ~4deg), lift on hover */
+.project {
+  transform-style: preserve-3d;
+  transition: transform .3s ease-out;
+}
+.project:hover { border-top-color: var(--orange); }
+
+/* Services + process steps: lift on hover */
+.service, .phases li {
+  transition: transform .25s cubic-bezier(.23, 1, .32, 1);
+}
+.service:hover, .phases li:hover { transform: translateY(-4px); }
+
+/* Demo: screen pulses on switch; CTA colour follows the chosen service */
+.demo-screen {
+  transition: opacity .2s ease-out, transform .2s ease-out;
+}
+.demo-screen.is-switching { opacity: 0; transform: scale(.98); }
+.demo-screen[data-job="ads"] .demo-screen-cta { background: var(--orange); }
+.demo-screen-cta { transition: background-color .2s ease-out; }
+
+/* Avatar: gentle scale on hover */
+.about-avatar img { transition: transform .3s cubic-bezier(.23, 1, .32, 1); }
+.about-avatar img:hover { transform: scale(1.04); }
+
+@media (prefers-reduced-motion: reduce) {
+  .js .hero-anim { opacity: 1; animation: none; }
+  .spotlight { display: none; }
+  .magnetic, .text-link, .project, .service, .phases li, .about-avatar img, .demo-screen {
+    transition: none;
+  }
+  .nav nav a::after { transition: none; }
+}
