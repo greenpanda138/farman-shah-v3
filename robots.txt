@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://greenpanda138.github.io/farman-shah-v3/sitemap.xml
