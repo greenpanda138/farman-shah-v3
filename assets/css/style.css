@@ -269,3 +269,58 @@ p { margin: 0 0 16px; }
   }
   .nav nav a::after { transition: none; }
 }
+
+/* ---- Council flashy verdict (2026-11-07): glow GO, marquee FIX, counters KILL ---- */
+/* RULE BENT, named: deliberate exception to the no-gradients/glow rule — one slow,
+   low-opacity radial glow behind the hero headline, at Farman's explicit request.
+   Guards: behind the headline only, never on text; 8-12% opacity; opacity-only
+   7s pulse; no filter: blur; off entirely for reduced motion. */
+
+/* Hero glow: one layer, orange fading to teal, 8-12% opacity, opacity-only pulse */
+.hero { position: relative; }
+.hero-glow {
+  position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 55% 45% at 28% 22%, rgba(255, 168, 0, 0.12), transparent 60%),
+    radial-gradient(ellipse 50% 45% at 78% 28%, rgba(0, 255, 224, 0.10), transparent 60%);
+  animation: glow-pulse 7s ease-in-out infinite alternate;
+}
+@keyframes glow-pulse {
+  from { opacity: 0.65; }
+  to { opacity: 1; }
+}
+.hero-grid { position: relative; z-index: 1; }
+
+/* Services marquee: one guarded strip between hero and work. CSS translateX only,
+   no JS. Each name links to #services; duplicate group is aria-hidden, no links.
+   Pause on hover/focus; reduced motion -> static row. */
+.marquee {
+  margin: -70px 0;
+  border-top: 2px solid var(--line);
+  border-bottom: 2px solid var(--line);
+  overflow: hidden;
+  padding: 14px 0;
+}
+.marquee-track {
+  display: flex; width: max-content;
+  animation: marquee-scroll 24s linear infinite;
+}
+@keyframes marquee-scroll {
+  to { transform: translateX(-50%); }
+}
+.marquee-group {
+  display: flex; align-items: center; gap: 28px; padding-right: 28px;
+  white-space: nowrap; font-weight: 800; font-size: 20px;
+}
+.marquee-group a { text-decoration: none; }
+.marquee-group a.service-orange, .marquee-group .service-orange { color: var(--orange); }
+.marquee-group a.service-teal, .marquee-group .service-teal { color: var(--teal); }
+.marquee-dot { color: var(--ink-soft); }
+.marquee:hover .marquee-track, .marquee:focus-within .marquee-track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-glow { display: none; animation: none; }
+  .marquee-track { animation: none; }
+}
